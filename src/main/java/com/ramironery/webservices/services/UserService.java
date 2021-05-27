@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.ramironery.webservices.entities.User;
 import com.ramironery.webservices.repositories.UserRepository;
+import com.ramironery.webservices.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class UserService {
@@ -21,7 +22,7 @@ public class UserService {
 	
 	public User findById(Long id) {
 		Optional<User> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 	
 	public User insert(User obj) {
@@ -32,6 +33,7 @@ public class UserService {
 		repository.deleteById(id);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public User update(Long id, User obj) {
 		User entity = repository.getOne(id);
 		updateData(entity, obj);
